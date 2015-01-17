@@ -1,6 +1,17 @@
 {
 	"general": {
-		"proxy": ""
+		"proxy": "",
+		"logger": {
+			"console":{
+				"disabled": false,
+				"level": "error"
+			},
+			"file": {
+				"disabled": false,
+				"location": "./logs/all.log",
+				"level": "debug"
+			}
+		}
 	},
 	"palladium": {
 		"host": "localhost",

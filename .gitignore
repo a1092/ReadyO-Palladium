@@ -1,5 +1,7 @@
 config.json
 
+logs/*
+
 node_modules/*
 !node_modules/palladium.js
 !node_modules/spotify.js

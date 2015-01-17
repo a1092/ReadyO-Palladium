@@ -1,4 +1,5 @@
 var PalladiumClient = require('palladium'); 
+var logger = require('logger');
 var gpio = require('rpi-gpio');
 var config = require('./config.json');
 
@@ -30,7 +31,8 @@ palladium.on("fr/readyo/palladium/output/open", function(data) {
 					"message": err
 				});
 
-	        	console.log('[ERROR] Failed to open a channel '+channel+':'+err);
+				logger.error("Failed to open a channel "+channel+" : "+err, { app: "pi" });
+
 	        	return;
 	        }
 
@@ -38,7 +40,7 @@ palladium.on("fr/readyo/palladium/output/open", function(data) {
 				"message": 'The channel '+channel+' was successful opened.'
 			});
 
-	        console.log('[INFO] The channel '+channel+' was successful opened.');
+        	logger.info("The channel "+channel+" was successful opened.", { app: "pi" });
 
 	    });
 	}
@@ -59,7 +61,7 @@ palladium.on("fr/readyo/palladium/output/close", function(data) {
 					"message": err
 				});
 
-	        	console.log('[ERROR] Failed to close a channel '+channel+':'+err);
+				logger.error("Failed to close a channel "+channel+" : "+err, { app: "pi" });
 	        	return;
 	        }
 
@@ -67,7 +69,7 @@ palladium.on("fr/readyo/palladium/output/close", function(data) {
 				"message": 'The channel '+channel+' was successful closed.'
 			});
 
-	        console.log('[INFO] The channel '+channel+' was successful closed.');
+        	logger.info("The channel "+channel+" was successful closed.", { app: "pi" });
 
 	    });
 	}
