@@ -1,0 +1,44 @@
+{
+	"general": {
+		"proxy": ""
+	},
+	"palladium": {
+		"host": "localhost",
+		"port": "8000", 
+		"channel": "palladium"
+	},
+	"spotify": {
+		"palladium": {
+			"privateKey": "",
+			"subscribtions": [
+				"^fr/readyo/palladium/music"
+			]
+		},
+		"desktop": {
+			"protocol": "http",
+			"host": "localhost",
+			"port": "4381"
+		}
+	},
+	"pi": {
+		"palladium": {
+			"privateKey": "",
+			"subscribtions": [
+				"^fr/readyo/palladium/output"
+			]
+		},
+		"outputs": {
+			"2": "7",
+			"3": "11",
+			"XX": "13",
+			"YY": "15"
+		}
+	},
+	"icecast": {
+		"palladium": {
+			"privateKey": "",
+			"subscribtions": [
+			]
+		}
+	}
+}
