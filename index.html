@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Socket.io</title>
+    </head>
+ 
+    <body>
+        <h1>Communication avec socket.io !</h1>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXUyJ9.eyJleHAiOjE0MjE2NjEwNTgsInVzZXJuYW1lIjoiYWxleCIsImlwIjoiMTI3LjAuMC4xIiwicGxhdGVmb3JtIjoiTW96aWxsYVwvNS4wIChYMTE7IExpbnV4IGk2ODYpIEFwcGxlV2ViS2l0XC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWVcLzM5LjAuMjE3MS45NSBTYWZhcmlcLzUzNy4zNiIsImlhdCI6IjE0MjE1NzQ2NTgifQ.jamy4KFfW-VVCdHeJTGNs_hRoGg23qhUVf8OiBYQ54xS9VFwMSDYFYOTYwHqNi8dRkwP64k_QHvTdSmGgejVXTB8iO1AA6XT4FE0c3rMmh5-3zVXE_pX9pOi37Uwl8AubmD1e3buizFdTCxcBNrVRKkFqmkTP1fuZapg4FclzeD2-Ah8wxGhhtHMZnIz1q9Fqao903-3MxxAgTjKeOIMMuc1zS20FY7tO5BKaa7AauHJUxxufySZb1SSxCl8Zbb22FBf2l-Fcd3nS-aOIphC4UUAkNfWvEzaFmhN2-34sqwjOwkTuGN9xsL9pYAlsqf4oXG8gVzEcN5QxXF9dDh4SM1G-3_FIagp22NpvtjoKX6gay-vccLNOUYv8xh75J_139yRkoAfJ9qxQ4TO9uKv9Fm3jwusNRnCM9N5aOIWESJeV2Ilcqqqml-4G6T3QhJWXjciEeNqbV-to51aLMUi4PAi-IKANXu3dPgmiouSfZOeSet6C1BEdvdTmUAxPYAVbP3HdVy_CcEkBWM562aD4gNfqYJLjNDy0KAmXj94aznZpRwCPxN38aPYGDeRrrTfbA1x-jYSLqu8TMf74UvBt_3tenvRaVLnjwN1f6Yalp511OJ3SC1NDaUhTv9wxAS24qF_qED3O2WMNWSGUfGjstuZf_mcom2efB69RVQEH3A";
+            var socket = io.connect('http://localhost:4243', { query: 'token='+token } );
+
+
+            socket.on("fr/readyo/palladium/live/authenticate/fail", function(data) {
+                console.log(data);
+            });
+
+            socket.on("fr/readyo/palladium/live/authenticate/success", function(data) {
+                console.log(data);
+            });
+
+            socket.on("fr/readyo/palladium/live/users/connect", function(data) {
+                console.log("Nouvel auditeur connecté : "+data.username);
+            });
+
+            socket.on("fr/readyo/palladium/live/users/disconnect", function(data) {
+                console.log("Deconnexion auditeur : "+data.username);
+            });
+
+            socket.on("fr/readyo/palladium/live/users/list", function(data) {
+                console.log(data);
+            });
+
+            
+
+        </script>
+    </body>
+</html>
