@@ -19,7 +19,7 @@ Afin de pouvoir utiliser les clients, vous devez au préalable installer les com
 
 ### Général
 
-    npm install ws
+    npm install ws winston
 
 
 ### Raspberry PI

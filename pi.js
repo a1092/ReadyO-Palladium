@@ -10,7 +10,7 @@ palladium.connect();
 
 for(var key in config.pi.outputs) {
 	
-    channel = outputs[key];
+    channel = config.pi.outputs[key];
     gpio.setup(channel, gpio.DIR_OUT);
 }
 
