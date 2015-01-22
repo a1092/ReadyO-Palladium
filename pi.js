@@ -4,7 +4,7 @@ var gpio = require('rpi-gpio');
 var config = require('./config.json');
 
 
-var palladium = new PalladiumClient(config.palladium, config.spotify.palladium);
+var palladium = new PalladiumClient(config.palladium, config.pi.palladium);
 palladium.connect();
 
 
