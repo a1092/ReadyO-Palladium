@@ -3,6 +3,15 @@ ReadyO - Bus Palladium
 
 Bienvenue dans les clients du Bus Palladium de l'association Ready'O Efrei.
 
+
+0) Paramétrage des proxy
+
+	npm config set proxy http://proxy.xxxxx.fr:3128
+	npm config set https-proxy http://proxy.xxxxx.fr:3128
+
+	git config --global http.proxy http://proxy.xxxxx.fr:3128
+	git config --global https.proxy http://proxy.xxxxx.fr:3128
+
 1) Installation de la solution
 ----------------------------------
 
