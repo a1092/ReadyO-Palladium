@@ -16,7 +16,8 @@
 	"palladium": {
 		"host": "localhost",
 		"port": "8000", 
-		"channel": "palladium"
+		"channel": "palladium",
+		"keepalive": "60"
 	},
 	"spotify": {
 		"palladium": {
