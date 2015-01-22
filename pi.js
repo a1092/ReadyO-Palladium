@@ -42,9 +42,9 @@ palladium.on("fr/readyo/palladium/output/open", function(data) {
 
 	self = this;
 
-	if(outputs.hasOwnProperty(data.channel)) {
+	if(config.pi.outputs.hasOwnProperty(data.channel)) {
 
-		channel = outputs[data.channel];
+		channel = config.pi.outputs[data.channel];
 
 		gpio.write(channel, false, function(err) {
 	        if (err) {
@@ -65,9 +65,9 @@ palladium.on("fr/readyo/palladium/output/close", function(data) {
 	
 	self = this;
 
-	if(outputs.hasOwnProperty(data.channel)) {
+	if(config.pi.outputs.hasOwnProperty(data.channel)) {
 
-		channel = outputs[data.channel];
+		channel = config.pi.outputs[data.channel];
 
 		gpio.write(channel, true, function(err) {
 	        if (err) {
