@@ -19,6 +19,10 @@ palladium.on("fr/readyo/palladium/music/pause", function(data) {
 	spotify.emit("com/spotify/remote/pause", true);
 });
 
+palladium.on("fr/readyo/palladium/music/stop", function(data) {
+	spotify.emit("com/spotify/remote/pause", true);
+});
+
 palladium.on("fr/readyo/palladium/music/unpause", function(data) {
 	spotify.emit("com/spotify/remote/pause", false);
 });
