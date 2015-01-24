@@ -3,37 +3,184 @@
     <head>
         <meta charset="utf-8" />
         <title>Socket.io</title>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
     </head>
  
     <body>
         <h1>Communication avec socket.io !</h1>
 
-        <script src="/socket.io/socket.io.js"></script>
+        <div class="alert alert-info" role="alert">
+            <form onsubmit="authentication(this); return false;">
+                <h4><i class="fa fa-key"></i> Login</h4>
+                <div class="row">
+                    <div class="col-md-5"><input type="text" name="username" class="form-control" placeholder="Username" value="alex" /></div>
+                    <div class="col-md-5"><input type="password" name="password" class="form-control" placeholder="Password" value="toto" /></div>
+                    <div class="col-md-2"><button type="submit" name="status" class="btn btn-default">Authentification</button></div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-8">
+
+                <hr />
+                    <h4><i class="fa fa-webchat"></i> Chat</h4>
+
+                    <form onsubmit="sendMessage(this); return false;">
+                        <input type="text" name="message" style="width: 90%;"/>
+                        <input type="submit" value="Envoyer" style="width: 9%;" />
+                    </form>
+                    <div class="row">
+                        <div class="col-md-4">Time</div>
+                        <div class="col-md-4">User</div>
+                        <div class="col-md-4">Message</div>
+                    </div>
+
+                    <div id="live-chat"></div>
+
+            </div>
+            <div class="col-md-4">
+                <hr />
+                <h4>Musique</h4>
+                <div id="music-info"></div>
+
+                <hr />
+                <h4>Programme</h4>
+                <div id="schedule-info"></div>
+
+                <hr />
+                <h4>Auditeurs</h4>
+                <div id="users-list"></div>
+            </div>
+
+        </div>
+
+        
         <script>
-            var token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXUyJ9.eyJleHAiOjE0MjE2NjEwNTgsInVzZXJuYW1lIjoiYWxleCIsImlwIjoiMTI3LjAuMC4xIiwicGxhdGVmb3JtIjoiTW96aWxsYVwvNS4wIChYMTE7IExpbnV4IGk2ODYpIEFwcGxlV2ViS2l0XC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWVcLzM5LjAuMjE3MS45NSBTYWZhcmlcLzUzNy4zNiIsImlhdCI6IjE0MjE1NzQ2NTgifQ.jamy4KFfW-VVCdHeJTGNs_hRoGg23qhUVf8OiBYQ54xS9VFwMSDYFYOTYwHqNi8dRkwP64k_QHvTdSmGgejVXTB8iO1AA6XT4FE0c3rMmh5-3zVXE_pX9pOi37Uwl8AubmD1e3buizFdTCxcBNrVRKkFqmkTP1fuZapg4FclzeD2-Ah8wxGhhtHMZnIz1q9Fqao903-3MxxAgTjKeOIMMuc1zS20FY7tO5BKaa7AauHJUxxufySZb1SSxCl8Zbb22FBf2l-Fcd3nS-aOIphC4UUAkNfWvEzaFmhN2-34sqwjOwkTuGN9xsL9pYAlsqf4oXG8gVzEcN5QxXF9dDh4SM1G-3_FIagp22NpvtjoKX6gay-vccLNOUYv8xh75J_139yRkoAfJ9qxQ4TO9uKv9Fm3jwusNRnCM9N5aOIWESJeV2Ilcqqqml-4G6T3QhJWXjciEeNqbV-to51aLMUi4PAi-IKANXu3dPgmiouSfZOeSet6C1BEdvdTmUAxPYAVbP3HdVy_CcEkBWM562aD4gNfqYJLjNDy0KAmXj94aznZpRwCPxN38aPYGDeRrrTfbA1x-jYSLqu8TMf74UvBt_3tenvRaVLnjwN1f6Yalp511OJ3SC1NDaUhTv9wxAS24qF_qED3O2WMNWSGUfGjstuZf_mcom2efB69RVQEH3A";
-            var socket = io.connect('http://localhost:4243', { query: 'token='+token } );
+            var socket;
+            var baseurl = "http://localhost/readyo";
+
+            function connect(token) {
+
+                socket = io.connect('http://localhost:4243', { query: 'token='+token } );
 
 
-            socket.on("fr/readyo/palladium/live/authenticate/fail", function(data) {
-                console.log(data);
-            });
+                socket.on("fr/readyo/palladium/live/authenticate/fail", function(data) {
+                    console.log(data);
+                });
 
-            socket.on("fr/readyo/palladium/live/authenticate/success", function(data) {
-                console.log(data);
-            });
+                socket.on("fr/readyo/palladium/live/authenticate/success", function(data) {
+                    console.log(data);
+                });
 
-            socket.on("fr/readyo/palladium/live/users/connect", function(data) {
-                console.log("Nouvel auditeur connecté : "+data.username);
-            });
+                socket.on("fr/readyo/palladium/live/users/connect", function(data) {
 
-            socket.on("fr/readyo/palladium/live/users/disconnect", function(data) {
-                console.log("Deconnexion auditeur : "+data.username);
-            });
+                    html = '<div class="user'+data.id+'">';
+                    html += '<i class="fa fa-user"></i> '+data.username;
+                    html += '</div>';
 
-            socket.on("fr/readyo/palladium/live/users/list", function(data) {
-                console.log(data);
-            });
+                    $("#users-list").append(html);
+                });
 
+                socket.on("fr/readyo/palladium/live/users/disconnect", function(data) {
+                    console.log(data);
+                    $("#users-list .user"+data.id).remove();
+                });
+
+                socket.on("fr/readyo/palladium/live/users/list", function(users) {
+                    for (var userid in users) {
+                        user = users[userid];
+
+                        html = '<div class="user'+user.id+'">';
+                        html += '<i class="fa fa-user"></i> '+user.username;
+                        html += '</div>';
+
+                        $("#users-list").append(html);
+                    }
+                });
+
+                socket.on("fr/readyo/palladium/live/message/receive", function(data) {
+                    
+
+                    html = '<div class="row">';
+                    html += '<div class="col-md-3">'+moment(data.send_at).format("HH:mm:ss")+'</div>';
+                    html += '<div class="col-md-3">'+data.user.username+'</div>';
+                    html += '<div class="col-md-6">'+data.text+'</div>';
+                    html += '</div>';
+
+                    $("#live-chat").prepend(html);
+                });
+
+                socket.on("fr/readyo/palladium/music/playing", function(data) {
+
+                    if(!$.isEmptyObject(data)) {
+                        html = '<div><i class="fa fa-music"></i> '+data.track.name+'</div>';
+                        html += '<div><i class="fa fa-user"></i> '+data.artist.name+'</div>';
+                        html += '<div><i class="fa fa-tag"></i> '+data.album.name+'</div>';
+                    } else {
+                        html = '<div class="text-center"><em>Aucune musique !</em></div>';
+                    }
+
+                    $("#music-info").html(html);
+                });
+
+
+                socket.on("fr/readyo/palladium/webradio/schedule", function(data) {
+                    if(!$.isEmptyObject(data)) {
+                        html = '';
+                        html += '<h4>'+data.title+'<br/><small>'+data.sub_title+'</small></h4>';
+                        html += '<div><i class="fa fa-clock-o"></i> '+data.duration+'</div>';
+                        html += '<div>Live: '+data.is_live+'</div>';
+                        html += '<div>Summary: '+data.summary+'</div>';
+                        html += '<div>Started: '+data.diffused_at+'</div>';
+                        html += '<div>Finished: '+data.finished_at+'</div>';
+                        html += '<div>Guest: '+data.guest+'</div>';
+                    } else {
+                        html = '<div class="text-center"><em>Aucun programme en cours</em></div>';
+                    }
+    
+                    $("#schedule-info").html(html);
+                });
+
+            }
+
+            function authentication(form) {
+                $(form.status).removeClass("btn-default btn-success btn-danger");
+
+                $.ajax({
+                    url : baseurl+'/api/login',
+                    type : 'POST',
+                    data: $(form).serialize(),
+                    dataType : 'json',
+                    success : function(data){
+                        connect(data.token);
+
+                        $(form.status).addClass("btn-success");
+                        $(form.status).html('<i class="fa fa-check"></i> Auth success');
+                    },
+
+                    error : function(result, statut, erreur){
+                        $(form.status).html('<i class="fa fa-remove"></i> Auth failed');
+                        $(form.status).addClass("btn-danger");
+                    }
+                });
+            }
+
+            function sendMessage(form) {
+                
+                socket.emit("fr/readyo/palladium/live/message/emit", {
+                    'message': $(form.message).val()
+                });
+                $(form.message).val("");
+            }
             
 
         </script>

@@ -9,11 +9,16 @@ var palladium = new PalladiumClient(config.palladium, config.live.palladium);
 palladium.connect();
 
 var clients = new Array();
+var schedule = null;
+var music = null;
 
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(req, res) {
     fs.readFile('./index.html', 'utf-8', function(error, content) {
-        res.writeHead(200, {"Content-Type": "text/html"});
+  
+        res.writeHead(200, {
+        	"Content-Type": "text/html",
+        });
         res.end(content);
     });
 });
@@ -47,10 +52,33 @@ io.sockets.on('connection', function (socket) {
 		"ip": socket.handshake.address
 	}, socket.id);
 
+	socket.on('disconnect', function() {
+
+    	if(!(socket.id in clients && clients[socket.id].authenticated == true)) return; 
+  
+    	broadcast('fr/readyo/palladium/live/users/disconnect', clients[socket.id].user);
+
+    	delete clients[socket.id]; 
+	});
 
 
 	socket.on('fr/readyo/palladium/live/echo', function (data) {
 		broadcast('fr/readyo/palladium/live/echo', data);
+    });
+
+    socket.on('fr/readyo/palladium/live/message/emit', function (data) {
+
+    	if(!(socket.id in clients && clients[socket.id].authenticated == true)) return; 
+    	console.log(data);
+
+		palladium.send("fr/readyo/palladium/live/message/emit", {
+			"userid": clients[socket.id].user.id,
+			"message": data.message
+		});
+    });
+
+    socket.on('fr/readyo/palladium/live/message/receive', function (data) {
+		broadcast('fr/readyo/palladium/live/message/', data);
     });
 });
 
@@ -74,6 +102,8 @@ palladium.on("fr/readyo/palladium/live/authenticate/success", function(data, soc
 	};
 
 	io.to(socketid).emit("fr/readyo/palladium/live/users/list", getUserList());
+	io.to(socketid).emit("fr/readyo/palladium/webradio/schedule", schedule);
+	io.to(socketid).emit("fr/readyo/palladium/music/playing", music);
 
 	broadcast('fr/readyo/palladium/live/users/connect', clients[socketid].user);
 });
@@ -87,6 +117,41 @@ palladium.on("fr/readyo/palladium/live/authenticate/fail", function(data, socket
 	clients[socketid] = {
 		authenticated: false
 	};
+});
+
+
+palladium.on("fr/readyo/palladium/live/message/receive", function(data, socketid) {
+	
+	broadcast('fr/readyo/palladium/live/message/receive', data);
+});
+
+
+palladium.on("fr/readyo/palladium/webradio/schedule/begining", function(data, socketid) {
+	
+	schedule = data;
+	broadcast('fr/readyo/palladium/webradio/schedule', data);
+});
+
+palladium.on("fr/readyo/palladium/webradio/schedule/ending", function(data, socketid) {
+	
+	schedule = null;
+	music = null;
+
+	broadcast('fr/readyo/palladium/webradio/schedule', schedule);
+	broadcast('fr/readyo/palladium/music/playing', music);
+});
+
+palladium.on("fr/readyo/palladium/music/playing", function(data, socketid) {
+	
+	if(schedule) {
+		if(data.playing) {
+			music = data.media;
+		} else {
+			music = {};
+		}
+
+		broadcast('fr/readyo/palladium/music/playing', music);
+	}
 });
 
 

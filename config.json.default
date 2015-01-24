@@ -46,11 +46,15 @@
 			"YY": "15"
 		}
 	},
-	"icecast": {
+	"live": {
 		"palladium": {
-			"privateKey": "",
+			"privateKey": "8w9Gn6xw5tL2kfs1X35Y3Zs1c8T8c37h",
 			"subscribtions": [
+				"^fr/readyo/palladium/live",
+				"^fr/readyo/palladium/music/playing",
+				"^fr/readyo/palladium/webradio/schedule"
 			]
-		}
+		},
+		"port": "4243"
 	}
 }
