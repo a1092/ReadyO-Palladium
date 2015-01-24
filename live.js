@@ -178,4 +178,4 @@ function broadcast(topic, data) {
 	}
 }
 
-server.listen(4243);
+server.listen(config.live.port);
