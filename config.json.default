@@ -11,7 +11,8 @@
 				"location": "./logs/all.log",
 				"level": "debug"
 			}
-		}
+		},
+                "root": "/home/palladium"
 	},
 	"palladium": {
 		"host": "localhost",
