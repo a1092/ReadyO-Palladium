@@ -14,9 +14,10 @@ var music = null;
 
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(req, res) {
-    fs.readFile('./index.html', 'utf-8', function(error, content) {
+    fs.readFile(config.general.root+"/index.html", 'utf-8', function(error, content) {
   
         res.writeHead(200, {
+		"Access-Control-Allow-Origin": "*",
         	"Content-Type": "text/html",
         });
         res.end(content);

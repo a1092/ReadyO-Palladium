@@ -66,11 +66,11 @@
         
         <script>
             var socket;
-            var baseurl = "http://localhost/readyo";
+            var baseurl = "http://www.readyo.linux.efrei.fr";
 
             function connect(token) {
 
-                socket = io.connect('http://localhost:4243', { query: 'token='+token } );
+                socket = io.connect('http://live.readyo.linux.efrei.fr:4343', { query: 'token='+token } );
 
 
                 socket.on("fr/readyo/palladium/live/authenticate/fail", function(data) {
