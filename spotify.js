@@ -35,6 +35,10 @@ palladium.on("fr/readyo/palladium/music/previous", function(data) {
 	spotify.emit("com/spotify/remote/previous");
 });
 
+palladium.on("fr/readyo/palladium/music/volume/set", function(data) {
+	exec('amixer -q sset Master '+data.volume+'%');
+});
+
 spotify.on("com/spotify/player/status", function(data) {
 	palladium.send("fr/readyo/palladium/music/playing", data);
 });
