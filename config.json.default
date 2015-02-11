@@ -4,21 +4,23 @@
 		"logger": {
 			"console":{
 				"disabled": false,
-				"level": "error"
+				"level": "debug"
 			},
 			"file": {
 				"disabled": false,
-				"location": "./logs/all.log",
+				"location": "/home/palladium/logs/all.log",
 				"level": "debug"
 			}
 		},
-                "root": "/home/palladium"
+		"backend": {
+			"protocol": "http",
+			"host": ""
+		}
 	},
 	"palladium": {
 		"host": "localhost",
-		"port": "8000", 
-		"channel": "palladium",
-		"keepalive": "60"
+		"port": "8888", 
+		"keepalive": 3600
 	},
 	"spotify": {
 		"palladium": {
@@ -49,7 +51,7 @@
 	},
 	"live": {
 		"palladium": {
-			"privateKey": "8w9Gn6xw5tL2kfs1X35Y3Zs1c8T8c37h",
+			"privateKey": "",
 			"subscribtions": [
 				"^fr/readyo/palladium/live",
 				"^fr/readyo/palladium/music/playing",
@@ -57,5 +59,15 @@
 			]
 		},
 		"port": "4243"
+	},
+	"backend": {
+		"palladium": {
+			"privateKey": "",
+			"subscribtions": [
+				"^fr/readyo/palladium/live/authenticate/check",
+				"^fr/readyo/palladium/live/message/emit",
+				"^fr/readyo/palladium/music/playing"
+			]
+		}
 	}
 }
