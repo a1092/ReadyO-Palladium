@@ -14,7 +14,7 @@ var schedule = null;
 var music = null;
 
 // Chargement du fichier index.html affiché au client
-var server = http.createServer(function(req, res) {
+var server = http.createServer(function(req, res) { 
     
     var path = url.parse(req.url).pathname; 
 
@@ -24,11 +24,11 @@ var server = http.createServer(function(req, res) {
     });
 
     if(path == "/onair") {
-    	fs.readFile("LiveTemplate/OnAir.html", 'utf-8', function(error, content) {
+    	fs.readFile(config.general.root+"/LiveTemplate/OnAir.html", 'utf-8', function(error, content) {
 	        res.end(content);
 	    });
     } else {
-	    fs.readFile("index.html", 'utf-8', function(error, content) {
+	    fs.readFile(config.general.root+"/index.html", 'utf-8', function(error, content) {
 	        res.end(content);
 	    });
 	}
