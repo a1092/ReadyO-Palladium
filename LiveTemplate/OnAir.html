@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ReadyO Live</title>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <script src="http://palladium.readyo.linux.efrei.fr:4242/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    </head>
+ 
+    <body>
+
+    	<div style="width: 80%; margin-left: auto; margin-right: auto; margin-top: 100px;">
+			<div id="palladium-status" class="label label-default" style="font-size: 90px; display: block; width: 500px;  text-align: center; margin-left: auto; margin-right: auto;">On Air</div>
+			<div class="text-center" id="palladium-schedule" style="font-size:20px; font-weight: bold;"></div>
+	    	
+	    	<div id="palladium-music" style="width: 80%; margin-top: 50px; margin-left: auto; margin-right: auto;">
+	    		
+	    		<div class="row" style="font-size: 40px;">
+		    		<div class="col-md-5 label label-info track"></div>
+		    		<div class="col-md-2"></div>
+		    		<div class="col-md-5 label label-info artist"></div>
+	    		</div>
+	    	</div>
+	    </div>
+
+
+    	<script>
+    		socket = io.connect('http://palladium.readyo.linux.efrei.fr:4242');
+			//socket = io.connect('http://localhost:4242');
+
+    		socket.emit("fr/readyo/palladium/register", {
+    			data: {
+    				privateKey: "qe13Q0cARdoy7I201mw8P61C6uj13VE2",
+					subscribtions: [
+						"^fr/readyo/palladium/music/playing",
+						"^fr/readyo/palladium/webradio/schedule"
+					]
+    			},
+    			reference: ""
+    		});
+
+            socket.on("fr/readyo/palladium/webradio/schedule/begining", function(raw) {
+                $("#palladium-status").removeClass("label-default label-danger");
+
+                $("#palladium-status").addClass("label-danger");
+                $("#palladium-schedule").html(raw.data.title);
+            });
+
+            socket.on("fr/readyo/palladium/webradio/schedule/ending", function(raw) {
+                $("#palladium-status").removeClass("label-default label-danger");
+
+                $("#palladium-status").addClass("label-default");
+                $("#palladium-schedule").html("");
+            });
+
+            socket.on("fr/readyo/palladium/music/playing", function(raw) {
+               
+                if(raw.data.playing) {
+                	$("#palladium-music").show();
+                	$("#palladium-music .track").html('<i class="fa fa-music"></i> '+raw.data.media.track.name);
+
+                	$("#palladium-music .artist").html('<i class="fa fa-users"></i> '+raw.data.media.artist.name);
+                } else {
+                	$("#palladium-music").hide();
+                }
+            });
+
+            
+    	</script>
+    </body>
+</html>

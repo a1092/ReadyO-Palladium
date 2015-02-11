@@ -1,6 +1,7 @@
 var PalladiumClient = require('palladium');
 var config = require('./config.json');
 var http = require('http');
+var url = require('url');
 var fs = require('fs');
 var logger = require('logger');
 
@@ -14,14 +15,23 @@ var music = null;
 
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(req, res) {
-    fs.readFile("index.html", 'utf-8', function(error, content) {
-  
-        res.writeHead(200, {
+    
+    var path = url.parse(req.url).pathname; 
+
+    res.writeHead(200, {
 		"Access-Control-Allow-Origin": "*",
-        	"Content-Type": "text/html",
-        });
-        res.end(content);
+    	"Content-Type": "text/html",
     });
+
+    if(path == "/onair") {
+    	fs.readFile("LiveTemplate/OnAir.html", 'utf-8', function(error, content) {
+	        res.end(content);
+	    });
+    } else {
+	    fs.readFile("index.html", 'utf-8', function(error, content) {
+	        res.end(content);
+	    });
+	}
 });
 
 // Chargement de socket.io
