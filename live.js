@@ -5,8 +5,8 @@ var fs = require('fs');
 var logger = require('logger');
 
 
-var palladium = new PalladiumClient(config.palladium, config.live.palladium);
-palladium.connect();
+var palladium = new PalladiumClient(config.live.palladium);
+palladium.connect(config.palladium); 
 
 var clients = new Array();
 var schedule = null;
@@ -14,7 +14,7 @@ var music = null;
 
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(req, res) {
-    fs.readFile(config.general.root+"/index.html", 'utf-8', function(error, content) {
+    fs.readFile("index.html", 'utf-8', function(error, content) {
   
         res.writeHead(200, {
 		"Access-Control-Allow-Origin": "*",
@@ -70,8 +70,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('fr/readyo/palladium/live/message/emit', function (data) {
 
     	if(!(socket.id in clients && clients[socket.id].authenticated == true)) return; 
-    	console.log(data);
-
+    	
+    	
 		palladium.send("fr/readyo/palladium/live/message/emit", {
 			"userid": clients[socket.id].user.id,
 			"message": data.message
@@ -85,20 +85,21 @@ io.sockets.on('connection', function (socket) {
 
 
 
-palladium.on("fr/readyo/palladium/live/authenticate/success", function(data, socketid) {
+palladium.on("fr/readyo/palladium/live/authenticate/success", function(raw) {
 	
-	userid = data.userid;
+	userid = raw.data.userid;
+	socketid = raw.reference;
 
 	io.to(socketid).emit("fr/readyo/palladium/live/authenticate/success");
-
+	
 	clients[socketid] = {
 		authenticated: true,
 		user: {
-			id: data.userid,
-			username: data.username,
+			id: raw.data.userid,
+			username: raw.data.username,
 		//	firstname: data.firstname,
 		//	lastname: data.lastname,
-			picture: data.picture
+			picture: raw.data.picture
 		}
 	};
 
@@ -109,8 +110,10 @@ palladium.on("fr/readyo/palladium/live/authenticate/success", function(data, soc
 	broadcast('fr/readyo/palladium/live/users/connect', clients[socketid].user);
 });
 
-palladium.on("fr/readyo/palladium/live/authenticate/fail", function(data, socketid) {
+palladium.on("fr/readyo/palladium/live/authenticate/fail", function(raw) {
 	
+	socketid = raw.reference;
+
 	io.to(socketid).emit("fr/readyo/palladium/live/authenticate/fail", {
 		message: "Bad credentials"
 	});
@@ -121,19 +124,19 @@ palladium.on("fr/readyo/palladium/live/authenticate/fail", function(data, socket
 });
 
 
-palladium.on("fr/readyo/palladium/live/message/receive", function(data, socketid) {
+palladium.on("fr/readyo/palladium/live/message/receive", function(raw) {
 	
-	broadcast('fr/readyo/palladium/live/message/receive', data);
+	broadcast('fr/readyo/palladium/live/message/receive', raw.data);
 });
 
 
-palladium.on("fr/readyo/palladium/webradio/schedule/begining", function(data, socketid) {
+palladium.on("fr/readyo/palladium/webradio/schedule/begining", function(raw) {
 	
-	schedule = data;
-	broadcast('fr/readyo/palladium/webradio/schedule', data);
+	schedule = raw.data;
+	broadcast('fr/readyo/palladium/webradio/schedule', raw.data);
 });
 
-palladium.on("fr/readyo/palladium/webradio/schedule/ending", function(data, socketid) {
+palladium.on("fr/readyo/palladium/webradio/schedule/ending", function(raw) {
 	
 	schedule = null;
 	music = null;
@@ -142,11 +145,11 @@ palladium.on("fr/readyo/palladium/webradio/schedule/ending", function(data, sock
 	broadcast('fr/readyo/palladium/music/playing', music);
 });
 
-palladium.on("fr/readyo/palladium/music/playing", function(data, socketid) {
-	
+palladium.on("fr/readyo/palladium/music/playing", function(raw) {
+
 	if(schedule) {
-		if(data.playing) {
-			music = data.media;
+		if(raw.data.playing) {
+			music = raw.data.media;
 		} else {
 			music = {};
 		}

@@ -66,11 +66,12 @@
         
         <script>
             var socket;
-            var baseurl = "http://www.readyo.linux.efrei.fr";
+//            var baseurl = "http://www.readyo.linux.efrei.fr";
+            var baseurl = "http://localhost/readyo";
 
             function connect(token) {
 
-                socket = io.connect('http://live.readyo.linux.efrei.fr:4343', { query: 'token='+token } );
+                socket = io.connect('http://localhost:4243', { query: 'token='+token } );
 
 
                 socket.on("fr/readyo/palladium/live/authenticate/fail", function(data) {
@@ -120,7 +121,7 @@
                 });
 
                 socket.on("fr/readyo/palladium/music/playing", function(data) {
-
+                    console.log(data);
                     if(!$.isEmptyObject(data)) {
                         html = '<div><i class="fa fa-music"></i> '+data.track.name+'</div>';
                         html += '<div><i class="fa fa-user"></i> '+data.artist.name+'</div>';
@@ -142,7 +143,7 @@
                         html += '<div>Summary: '+data.summary+'</div>';
                         html += '<div>Started: '+data.diffused_at+'</div>';
                         html += '<div>Finished: '+data.finished_at+'</div>';
-                        html += '<div>Guest: '+data.guest+'</div>';
+                        html += '<div>Guest: '+data.guests+'</div>';
                     } else {
                         html = '<div class="text-center"><em>Aucun programme en cours</em></div>';
                     }
