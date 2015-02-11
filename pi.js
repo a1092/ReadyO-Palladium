@@ -4,8 +4,8 @@ var gpio = require('rpi-gpio');
 var config = require('./config.json');
 
 
-var palladium = new PalladiumClient(config.palladium, config.pi.palladium);
-palladium.connect();
+var palladium = new PalladiumClient(config.pi.palladium);
+palladium.connect(config.palladium);
 
 
 for(var key in config.pi.outputs) {
@@ -38,13 +38,13 @@ gpio.on('export', function(channel) {
 
 
 
-palladium.on("fr/readyo/palladium/output/open", function(data) {
+palladium.on("fr/readyo/palladium/output/open", function(raw) {
 
 	self = this;
 
-	if(config.pi.outputs.hasOwnProperty(data.channel)) {
+	if(config.pi.outputs.hasOwnProperty(raw.data.channel)) {
 
-		channel = config.pi.outputs[data.channel];
+		channel = config.pi.outputs[raw.data.channel];
 
 		gpio.write(channel, false, function(err) {
 	        if (err) {
@@ -61,13 +61,13 @@ palladium.on("fr/readyo/palladium/output/open", function(data) {
 
 
 
-palladium.on("fr/readyo/palladium/output/close", function(data) {
+palladium.on("fr/readyo/palladium/output/close", function(raw) {
 	
 	self = this;
 
-	if(config.pi.outputs.hasOwnProperty(data.channel)) {
+	if(config.pi.outputs.hasOwnProperty(raw.data.channel)) {
 
-		channel = config.pi.outputs[data.channel];
+		channel = config.pi.outputs[raw.data.channel];
 
 		gpio.write(channel, true, function(err) {
 	        if (err) {
