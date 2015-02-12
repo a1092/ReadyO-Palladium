@@ -27,6 +27,10 @@ var server = http.createServer(function(req, res) {
     	fs.readFile(config.general.root+"/LiveTemplate/OnAir.html", 'utf-8', function(error, content) {
 	        res.end(content);
 	    });
+    } else if(path == "/audience") {
+    	fs.readFile(config.general.root+"/LiveTemplate/Audience.html", 'utf-8', function(error, content) {
+	        res.end(content);
+	    });
     } else {
 	    fs.readFile(config.general.root+"/index.html", 'utf-8', function(error, content) {
 	        res.end(content);
