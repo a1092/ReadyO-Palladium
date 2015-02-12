@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ReadyO Audience</title>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <script src="http://palladium.readyo.linux.efrei.fr:4242/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    </head>
+ 
+    <body>
+
+
+    	<div style="font-size: 80px; text-align: center;" id="audience-count"></div>
+
+    	<script>
+    		socket = io.connect('http://palladium.readyo.linux.efrei.fr:4242');
+			//socket = io.connect('http://localhost:4242');
+
+    		socket.emit("fr/readyo/palladium/register", {
+    			data: {
+    				privateKey: "J6F7T5788bu6Q06C36NxzDI4zC1D4k5S",
+					subscribtions: [
+						"^fr/readyo/palladium/live/users"
+					]
+    			},
+    			reference: ""
+    		});
+
+    		var audience = 0;
+
+            socket.on("fr/readyo/palladium/live/users/connect", function(raw) {
+                audience = audience+1;
+                $("#audience-count").html(audience);
+            });
+
+            socket.on("fr/readyo/palladium/live/users/disconnect", function(raw) {
+                audience = audience-1;
+                $("#audience-count").html(audience);
+            });
+
+            
+    	</script>
+    </body>
+</html>
