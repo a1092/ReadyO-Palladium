@@ -27,11 +27,11 @@ var server = http.createServer(function(req, res) {
     	fs.readFile(config.general.root+"/LiveTemplate/OnAir.html", 'utf-8', function(error, content) {
 	        res.end(content);
 	    });
-    } else if(path == "/audience") {
+/*    } else if(path == "/audience") {
     	fs.readFile(config.general.root+"/LiveTemplate/Audience.html", 'utf-8', function(error, content) {
 	        res.end(content);
 	    });
-    } else {
+ */   } else {
 	    fs.readFile(config.general.root+"/index.html", 'utf-8', function(error, content) {
 	        res.end(content);
 	    });
@@ -73,7 +73,7 @@ io.sockets.on('connection', function (socket) {
   
     	broadcast('fr/readyo/palladium/live/users/disconnect', clients[socket.id].user);
 
-    	palladium.send("fr/readyo/palladium/live/users/disconnect", clients[socket.id].user);
+    	//palladium.send("fr/readyo/palladium/live/users/disconnect", clients[socket.id].user);
 
     	delete clients[socket.id]; 
 	});
@@ -124,7 +124,7 @@ palladium.on("fr/readyo/palladium/live/authenticate/success", function(raw) {
 	io.to(socketid).emit("fr/readyo/palladium/music/playing", music);
 
 	broadcast('fr/readyo/palladium/live/users/connect', clients[socketid].user);
-	palladium.send("fr/readyo/palladium/live/users/connect", clients[socket.id].user);
+	//palladium.send("fr/readyo/palladium/live/users/connect", clients[socket.id].user);
 });
 
 palladium.on("fr/readyo/palladium/live/authenticate/fail", function(raw) {
