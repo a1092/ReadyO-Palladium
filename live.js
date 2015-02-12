@@ -69,6 +69,8 @@ io.sockets.on('connection', function (socket) {
   
     	broadcast('fr/readyo/palladium/live/users/disconnect', clients[socket.id].user);
 
+    	palladium.send("fr/readyo/palladium/live/users/disconnect", clients[socket.id].user);
+
     	delete clients[socket.id]; 
 	});
 
@@ -118,6 +120,7 @@ palladium.on("fr/readyo/palladium/live/authenticate/success", function(raw) {
 	io.to(socketid).emit("fr/readyo/palladium/music/playing", music);
 
 	broadcast('fr/readyo/palladium/live/users/connect', clients[socketid].user);
+	palladium.send("fr/readyo/palladium/live/users/connect", clients[socket.id].user);
 });
 
 palladium.on("fr/readyo/palladium/live/authenticate/fail", function(raw) {
